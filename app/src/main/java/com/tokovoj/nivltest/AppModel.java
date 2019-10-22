@@ -1,8 +1,7 @@
-package com.example.nivltest;
+package com.tokovoj.nivltest;
 
-import com.example.nivltest.Net.MediaType;
-import com.example.nivltest.Net.NivlData;
-import com.example.nivltest.Net.Net;
+import com.tokovoj.nivltest.Network.MediaType;
+import com.tokovoj.nivltest.Data.NivlData;
 
 public interface AppModel
 {
@@ -19,9 +18,9 @@ public interface AppModel
 
     interface Network
     {
-        void searchNivlData(Net.GetNivlDataCallback callback, String q, int startPage, String mediaType);
+        void searchNivlData(com.tokovoj.nivltest.Network.Network.GetNivlDataCallback callback, String q, int startPage, String mediaType);
 
-        void getNivlAssets(Net.GetNivlAssetsCallback callback, String href, MediaType mediaType);
+        void getNivlAssets(com.tokovoj.nivltest.Network.Network.GetNivlAssetsCallback callback, String href, MediaType mediaType);
     }
 
     interface Mediator

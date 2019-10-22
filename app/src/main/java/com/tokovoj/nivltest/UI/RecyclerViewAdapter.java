@@ -1,4 +1,4 @@
- package com.example.nivltest.UI;
+ package com.tokovoj.nivltest.UI;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.nivltest.Net.NivlData;
+import com.tokovoj.nivltest.Data.Item;
 import com.example.nivltest.R;
 import com.squareup.picasso.Picasso;
 
@@ -20,7 +20,7 @@ import java.util.List;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>
 {
     public static final String TAG = "RECYCLER_VIEW_ADAPTER";
-    private List<NivlData.Collection.Item> dataList;
+    private List<Item> dataList;
     private MainActivity.OnListInteractionListener lisener;
 
     class ViewHolder extends RecyclerView.ViewHolder
@@ -42,7 +42,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
-    RecyclerViewAdapter(List<NivlData.Collection.Item> data, MainActivity.OnListInteractionListener listener)
+    RecyclerViewAdapter(List<Item> data, MainActivity.OnListInteractionListener listener)
     {
         this.dataList = data;
         this.lisener = listener;
@@ -76,7 +76,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.imageView.setImageResource(R.drawable.nasa_logo);
         }
 
-        holder.view.setOnClickListener(new View.OnClickListener() {
+        holder.view.setOnClickListener(new View.OnClickListener()
+        {
 
             @Override
             public void onClick(View v)
@@ -90,7 +91,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
-    public int getItemCount() {
+    public int getItemCount()
+    {
         return dataList.size();
     }
 

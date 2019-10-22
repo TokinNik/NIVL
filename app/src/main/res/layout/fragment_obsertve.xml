@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/black_overlay"
     android:orientation="vertical"
-    tools:context=".UI.ObserveFragment">
+    tools:context="com.tokovoj.nivltest.UI.ObserveFragment">
 
     <TextView
         android:id="@+id/observe_title_textView"

@@ -1,4 +1,4 @@
-package com.example.nivltest.UI;
+package com.tokovoj.nivltest.UI;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -19,21 +19,17 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
-import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
-import com.example.nivltest.Net.MediaType;
-import com.example.nivltest.Net.NivlData;
+import com.tokovoj.nivltest.Data.Item;
+import com.tokovoj.nivltest.Network.MediaType;
+import com.tokovoj.nivltest.Data.NivlData;
 import com.example.nivltest.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import static android.view.Gravity.CENTER;
@@ -45,14 +41,14 @@ public class ObserveFragment extends Fragment
     private MediaPlayer mediaPlayer = new MediaPlayer();
     private View view;
     private OnFragmentInteractionListener mListener;
-    private NivlData.Collection.Item observeNivlItem;
+    private Item observeNivlItem;
 
     public ObserveFragment()
     {
 
     }
 
-    ObserveFragment(NivlData.Collection.Item nivlItem)
+    ObserveFragment(Item nivlItem)
     {
         this.observeNivlItem = nivlItem;
     }

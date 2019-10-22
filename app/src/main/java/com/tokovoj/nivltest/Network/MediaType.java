@@ -1,4 +1,4 @@
-package com.example.nivltest.Net;
+package com.tokovoj.nivltest.Network;
 
 public enum MediaType
 {

@@ -1,10 +1,11 @@
-package com.example.nivltest.Net;
+package com.tokovoj.nivltest.Network;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.nivltest.AppModel;
+import com.tokovoj.nivltest.AppModel;
+import com.tokovoj.nivltest.Data.NivlData;
 
 import java.util.Arrays;
 
@@ -14,7 +15,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class Net implements AppModel.Network
+public class Network implements AppModel.Network
 {
     public static final String TAG = "NET";
     public static final String VIDEO_FORMAT_MEDIUM = "~medium.mp4";
@@ -24,10 +25,10 @@ public class Net implements AppModel.Network
     public static final String IMAGE_FORMAT_LARGE = "~large.jpg";
     public static final String IMAGE_FORMAT_ORIG = "~orig.jpg";
 
-    private  Retrofit retrofit;
+    private Retrofit retrofit;
     private NasaApi nasaApi;
 
-    public Net()
+    public Network()
     {
         retrofit = new Retrofit.Builder()
                 .baseUrl("https://images-api.nasa.gov/")

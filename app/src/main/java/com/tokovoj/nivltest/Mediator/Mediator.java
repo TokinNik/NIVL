@@ -1,22 +1,22 @@
-package com.example.nivltest.Mediator;
+package com.tokovoj.nivltest.Mediator;
 
 import android.util.Log;
 
-import com.example.nivltest.AppModel;
-import com.example.nivltest.Net.MediaType;
-import com.example.nivltest.Net.NivlData;
-import com.example.nivltest.Net.Net;
+import com.tokovoj.nivltest.AppModel;
+import com.tokovoj.nivltest.Network.MediaType;
+import com.tokovoj.nivltest.Data.NivlData;
+import com.tokovoj.nivltest.Network.Network;
 
 public class Mediator implements AppModel.Mediator
 {
     public static final String TAG = "MEDIATOR";
     private AppModel.UI ui;
-    private AppModel.Network net;
+    private AppModel.Network network;
     private boolean connectionLost;
 
-    public Mediator(AppModel.Network net)
+    public Mediator(AppModel.Network network)
     {
-        this.net = net;
+        this.network = network;
         connectionLost = false;
     }
 
@@ -35,20 +35,24 @@ public class Mediator implements AppModel.Mediator
     @Override
     public void getNivlAssets(String href, final MediaType mediaType)
     {
-        net.getNivlAssets(new Net.GetNivlAssetsCallback() {
+        network.getNivlAssets(new Network.GetNivlAssetsCallback()
+        {
             @Override
-            public void onComplete(String href) {
+            public void onComplete(String href)
+            {
                 Log.d(TAG, "onComplete: " + href);
                 ui.setNivlAssets(href, mediaType);
             }
 
             @Override
-            public void onCompleteError(int code) {
+            public void onCompleteError(int code)
+            {
 
             }
 
             @Override
-            public void onFailture() {
+            public void onFailture()
+            {
 
             }
         }, href, mediaType);
@@ -57,7 +61,8 @@ public class Mediator implements AppModel.Mediator
     @Override
     public void searchNivlData(String q, int startPage, String mediaType)
     {
-        net.searchNivlData(new Net.GetNivlDataCallback() {
+        network.searchNivlData(new Network.GetNivlDataCallback()
+        {
             @Override
             public void onComplete(NivlData nivlData)
             {
