@@ -1,6 +1,5 @@
  package com.tokovoj.nivltest.UI;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +59,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull final RecyclerViewAdapter.ViewHolder holder, final int position)
     {
-        Log.d(TAG, "onBindViewHolder: " + dataList.get(position).getData().get(0).getTitle());
         holder.titleTextView.setText(dataList.get(position).getData().get(0).getTitle());
         holder.dateTextView.setText(dataList.get(position).getData().get(0).getDate_created().substring(0,10));
         holder.typeTextView.setText(dataList.get(position).getData().get(0).getMedia_type());
@@ -78,16 +76,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         holder.view.setOnClickListener(new View.OnClickListener()
         {
-
             @Override
             public void onClick(View v)
             {
-
                 lisener.OnListInteraction(position);
-
             }
         });
-
     }
 
     @Override

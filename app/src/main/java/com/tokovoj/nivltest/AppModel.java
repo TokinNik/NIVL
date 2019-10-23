@@ -1,6 +1,8 @@
 package com.tokovoj.nivltest;
 
-import com.tokovoj.nivltest.Network.MediaType;
+import com.tokovoj.nivltest.Network.Connection.GetNivlAssetsCallback;
+import com.tokovoj.nivltest.Network.Connection.GetNivlDataCallback;
+import com.tokovoj.nivltest.Network.Connection.MediaType;
 import com.tokovoj.nivltest.Data.NivlData;
 
 public interface AppModel
@@ -9,7 +11,9 @@ public interface AppModel
     {
         void onItemsUpdate(NivlData nivlData);
 
-        void setErrorMessage(int code);
+        void setNoResultErrorMessage();
+
+        void setDownloadErrorMessage();
 
         void setConnectionLostMessage();
 
@@ -18,9 +22,9 @@ public interface AppModel
 
     interface Network
     {
-        void searchNivlData(com.tokovoj.nivltest.Network.Network.GetNivlDataCallback callback, String q, int startPage, String mediaType);
+        void getNivlData(GetNivlDataCallback callback, String q, int startPage, String mediaType);
 
-        void getNivlAssets(com.tokovoj.nivltest.Network.Network.GetNivlAssetsCallback callback, String href, MediaType mediaType);
+        void getNivlAssets(GetNivlAssetsCallback callback, String href, MediaType mediaType);
     }
 
     interface Mediator
@@ -29,7 +33,7 @@ public interface AppModel
 
         void detachUI();
 
-        void searchNivlData(String q, int startPage, String mediaType);
+        void getNivlData(String q, int startPage, String mediaType);
 
         void getNivlAssets(String href, MediaType media_type);
     }

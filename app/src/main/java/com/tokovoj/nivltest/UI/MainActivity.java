@@ -22,9 +22,9 @@ import android.widget.Toast;
 import com.tokovoj.nivltest.AppModel;
 import com.tokovoj.nivltest.Data.Item;
 import com.tokovoj.nivltest.Mediator.Mediator;
-import com.tokovoj.nivltest.Network.MediaType;
+import com.tokovoj.nivltest.Network.Connection.MediaType;
 import com.tokovoj.nivltest.Data.NivlData;
-import com.tokovoj.nivltest.Network.Network;
+import com.tokovoj.nivltest.Network.Connection.Network;
 import com.example.nivltest.R;
 
 import java.util.ArrayList;
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements AppModel.UI, Obse
             else
             {
                 builder.deleteCharAt(builder.length()-1);
-                mediator.searchNivlData(q, page, builder.toString());
+                mediator.getNivlData(q, page, builder.toString());
                 loadDialog.show();
                 return true;
             }
@@ -203,31 +203,29 @@ public class MainActivity extends AppCompatActivity implements AppModel.UI, Obse
     }
 
     @Override
-    public void setErrorMessage(int code)//todo move to net
+    public void setNoResultErrorMessage()
     {
-        switch (code)
-        {
-            case 204:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(R.string.no_result_error)
-                        .setMessage(R.string.no_result_message)
-                        .setCancelable(true)
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which)
-                            {
-                                dialog.cancel();
-                                loadDialog.hide();
-                            }
-                        });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-                break;
-            case 400:
-                Toast.makeText(this, R.string.download_error,  Toast.LENGTH_SHORT).show();
-                break;
-        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.no_result_error)
+                .setMessage(R.string.no_result_message)
+                .setCancelable(true)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        dialog.cancel();
+                        loadDialog.hide();
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    @Override
+    public void setDownloadErrorMessage()
+    {
+        Toast.makeText(this, R.string.download_error,  Toast.LENGTH_SHORT).show();
     }
 
     @Override
