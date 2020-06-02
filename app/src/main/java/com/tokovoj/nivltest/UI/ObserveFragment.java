@@ -1,4 +1,4 @@
-package com.example.nivltest.UI;
+package com.tokovoj.nivltest.UI;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,21 +18,16 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
-import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
-import com.example.nivltest.Net.MediaType;
-import com.example.nivltest.Net.NivlData;
+import com.tokovoj.nivltest.Data.Item;
+import com.tokovoj.nivltest.Network.Connection.MediaType;
 import com.example.nivltest.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import static android.view.Gravity.CENTER;
@@ -45,14 +39,9 @@ public class ObserveFragment extends Fragment
     private MediaPlayer mediaPlayer = new MediaPlayer();
     private View view;
     private OnFragmentInteractionListener mListener;
-    private NivlData.Collection.Item observeNivlItem;
+    private Item observeNivlItem;
 
-    public ObserveFragment()
-    {
-
-    }
-
-    ObserveFragment(NivlData.Collection.Item nivlItem)
+    ObserveFragment(Item nivlItem)
     {
         this.observeNivlItem = nivlItem;
     }
@@ -87,7 +76,6 @@ public class ObserveFragment extends Fragment
             ((TextView)view.findViewById(R.id.observe_title_textView)).setText(R.string.data_not_load);
             ((TextView)view.findViewById(R.id.observe_content_textView)).setText(R.string.data_not_load);
         }
-
     }
 
     @Override
@@ -140,16 +128,15 @@ public class ObserveFragment extends Fragment
 
     void setNivlVideo(final String href)
     {
-        Log.d(TAG, "setNivlVideo: " + href);
-
         final VideoView videoView =  view.findViewById(R.id.observe_videoView);
 
         MediaController mediaController = new MediaController(view.getContext());
         mediaController.setAnchorView(videoView);
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener()
+        {
             @Override
-            public void onPrepared(MediaPlayer mp) {
-                Log.d(TAG, "onPrepared: ");
+            public void onPrepared(MediaPlayer mp)
+            {
                 videoView.setVisibility(View.VISIBLE);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(new LinearLayout.LayoutParams((int)(400*view.getContext().getResources().getDisplayMetrics().density), ViewGroup.LayoutParams.MATCH_PARENT));
                 params.gravity = CENTER;
@@ -157,10 +144,11 @@ public class ObserveFragment extends Fragment
                 view.findViewById(R.id.observe_progressBar).setVisibility(View.GONE);
             }
         });
-        videoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+        videoView.setOnErrorListener(new MediaPlayer.OnErrorListener()
+        {
             @Override
-            public boolean onError(MediaPlayer mp, int what, int extra) {
-                Log.d(TAG, "onError: ");
+            public boolean onError(MediaPlayer mp, int what, int extra)
+            {
                 return false;
             }
         });
@@ -181,23 +169,26 @@ public class ObserveFragment extends Fragment
             e.printStackTrace();
         }
 
-        mediaPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
+        mediaPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener()
+        {
             @Override
-            public void onBufferingUpdate(MediaPlayer mp, int percent) {
-                Log.d(TAG, "onBufferingUpdate: " + percent);
+            public void onBufferingUpdate(MediaPlayer mp, int percent)
+            {
                 if(percent > 0)
                     ((SeekBar)view.findViewById(R.id.player_progressBar)).setSecondaryProgress(mp.getDuration()/percent);
             }
         });
-        mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+        mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener()
+        {
             @Override
-            public boolean onError(MediaPlayer mp, int what, int extra) {
-                Log.d(TAG, "onError: " + what + " " + extra);
+            public boolean onError(MediaPlayer mp, int what, int extra)
+            {
                 AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
                 builder.setTitle(R.string.audio_not_found_error)
                         .setMessage(R.string.audio_not_found_message)
                         .setCancelable(true)
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
+                        {
                             @Override
                             public void onClick(DialogInterface dialog, int which)
                             {
@@ -211,9 +202,11 @@ public class ObserveFragment extends Fragment
                 return false;
             }
         });
-        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener()
+        {
             @Override
-            public void onPrepared(MediaPlayer mp) {
+            public void onPrepared(MediaPlayer mp)
+            {
                 mediaPlayer.start();
                 view.findViewById(R.id.observe_progressBar).setVisibility(View.GONE);
                 view.findViewById(R.id.observe_videoView).setVisibility(View.GONE);
@@ -223,39 +216,40 @@ public class ObserveFragment extends Fragment
                 ((SeekBar)view.findViewById(R.id.player_progressBar)).setMax(mp.getDuration()/1000);
                 ((SeekBar)view.findViewById(R.id.player_progressBar)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
+                    {
                         if(fromUser)
                         {
                             mediaPlayer.seekTo(progress*1000);
                             ((TextView)view.findViewById(R.id.player_progress_textView)).setText(convertTime(mediaPlayer.getCurrentPosition()));
-
                         }
                     }
 
                     @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    }
+                    public void onStartTrackingTouch(SeekBar seekBar)
+                    {}
 
                     @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-
-                    }
+                    public void onStopTrackingTouch(SeekBar seekBar)
+                    {}
                 });
 
                 startPlayerProgress();
             }
         });
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
+        {
             @Override
-            public void onCompletion(MediaPlayer mp) {
+            public void onCompletion(MediaPlayer mp)
+            {
                 ((ImageButton)view.findViewById(R.id.player_imageButton)).setImageResource(android.R.drawable.ic_media_play);
             }
         });
-        view.findViewById(R.id.player_imageButton).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.player_imageButton).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 if(mediaPlayer.isPlaying())
                 {
                     mediaPlayer.pause();
@@ -268,9 +262,11 @@ public class ObserveFragment extends Fragment
                 }
             }
         });
-        view.findViewById(R.id.player_forward_imageButton).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.player_forward_imageButton).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 if(mediaPlayer.isPlaying())
                 {
                     int shift = mediaPlayer.getCurrentPosition() + 30000;
@@ -287,9 +283,11 @@ public class ObserveFragment extends Fragment
                 }
             }
         });
-        view.findViewById(R.id.player_back_imageButton).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.player_back_imageButton).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 if(mediaPlayer.isPlaying())
                 {
                     int shift = mediaPlayer.getCurrentPosition() - 30000;
@@ -311,9 +309,11 @@ public class ObserveFragment extends Fragment
     private void startPlayerProgress()
     {
         final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+        handler.postDelayed(new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 if(mediaPlayer == null)
                 {
                     System.out.println("NULL NULL NULL NULL");

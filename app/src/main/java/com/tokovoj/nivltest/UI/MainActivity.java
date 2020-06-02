@@ -1,4 +1,4 @@
-package com.example.nivltest.UI;
+package com.tokovoj.nivltest.UI;
 
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -18,11 +19,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.nivltest.AppModel;
-import com.example.nivltest.Mediator.Mediator;
-import com.example.nivltest.Net.MediaType;
-import com.example.nivltest.Net.NivlData;
-import com.example.nivltest.Net.Net;
+import com.tokovoj.nivltest.AppModel;
+import com.tokovoj.nivltest.Data.Item;
+import com.tokovoj.nivltest.Mediator.Mediator;
+import com.tokovoj.nivltest.Network.Connection.MediaType;
+import com.tokovoj.nivltest.Data.NivlData;
+import com.tokovoj.nivltest.Network.Connection.Network;
 import com.example.nivltest.R;
 
 import java.util.ArrayList;
@@ -41,12 +43,14 @@ public class MainActivity extends AppCompatActivity implements AppModel.UI, Obse
     private TextView pageText;
     private int currentPage;
     private int pageCount;
-    List<NivlData.Collection.Item> list = new ArrayList<>();
+    List<Item> list = new ArrayList<>();
 
     private FragmentManager fragmentManager;
-    private OnListInteractionListener listener = new OnListInteractionListener() {
+    private OnListInteractionListener listener = new OnListInteractionListener()
+    {
         @Override
-        public void OnListInteraction(int position) {
+        public void OnListInteraction(int position)
+        {
             setObserveFragment(list.get(position));
         }
     };
@@ -58,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements AppModel.UI, Obse
 
         setContentView(R.layout.activity_main);
 
-        Net net = new Net();
+        Network net = new Network();
         mediator = new Mediator(net);
         mediator.attachUI(this);
 
@@ -80,9 +84,11 @@ public class MainActivity extends AppCompatActivity implements AppModel.UI, Obse
         pageText = findViewById(R.id.page_textView);
 
         ImageButton nextButton = findViewById(R.id.next_imageButton);
-        nextButton.setOnClickListener(new View.OnClickListener() {
+        nextButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 if(currentPage < pageCount)
                 {
                     currentPage++;
@@ -96,9 +102,11 @@ public class MainActivity extends AppCompatActivity implements AppModel.UI, Obse
         });
 
         ImageButton prewButton = findViewById(R.id.prew_imageButton);
-        prewButton.setOnClickListener(new View.OnClickListener() {
+        prewButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 if(currentPage > 1)
                 {
                     currentPage--;
@@ -112,7 +120,8 @@ public class MainActivity extends AppCompatActivity implements AppModel.UI, Obse
         });
 
         Button searchButton = findViewById(R.id.search_button);
-        searchButton.setOnClickListener(new View.OnClickListener() {
+        searchButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View v) {
                 if(searhNivlData(START_PAGE))
@@ -137,11 +146,17 @@ public class MainActivity extends AppCompatActivity implements AppModel.UI, Obse
         {
             StringBuilder builder = new StringBuilder();
             if(((CheckBox)findViewById(R.id.image_checkBox)).isChecked())
+            {
                 builder.append("image,");
+            }
             if(((CheckBox)findViewById(R.id.video_checkBox)).isChecked())
+            {
                 builder.append("video,");
+            }
             if(((CheckBox)findViewById(R.id.audio_checkBox)).isChecked())
+            {
                 builder.append("audio,");
+            }
 
             if (builder.length() == 0)
             {
@@ -151,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements AppModel.UI, Obse
             else
             {
                 builder.deleteCharAt(builder.length()-1);
-                mediator.searchNivlData(q, page, builder.toString());
+                mediator.getNivlData(q, page, builder.toString());
                 loadDialog.show();
                 return true;
             }
@@ -159,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements AppModel.UI, Obse
         return false;
     }
 
-    private void setObserveFragment(NivlData.Collection.Item nivlItem)
+    private void setObserveFragment(Item nivlItem)
     {
         recyclerView.setVisibility(View.GONE);
         getSupportActionBar().hide();
@@ -175,39 +190,42 @@ public class MainActivity extends AppCompatActivity implements AppModel.UI, Obse
     public void onItemsUpdate(NivlData nivlData)
     {
         list = nivlData.getCollection().getItems();
+        Log.d(TAG, "onItemsUpdate: " + list.size());
         int totalHits = nivlData.getCollection().getMetadata().getTotal_hits();
-        pageCount = totalHits/MAX_ITEMS_COUNT;
-        if(pageCount == 0) pageCount++;
+        pageCount = totalHits / MAX_ITEMS_COUNT;
+        if(pageCount == 0)
+        {
+            pageCount++;
+        }
         pageText.setText(new StringBuilder().append(currentPage).append("/").append(pageCount).toString());
         recyclerView.setAdapter(new RecyclerViewAdapter(list, listener));
         loadDialog.hide();
     }
 
     @Override
-    public void setErrorMessage(int code)
+    public void setNoResultErrorMessage()
     {
-        switch (code)
-        {
-            case 204:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(R.string.no_result_error)
-                        .setMessage(R.string.no_result_message)
-                        .setCancelable(true)
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which)
-                            {
-                                dialog.cancel();
-                                loadDialog.hide();
-                            }
-                        });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-                break;
-            case 400:
-                Toast.makeText(this, R.string.download_error,  Toast.LENGTH_SHORT).show();
-                break;
-        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.no_result_error)
+                .setMessage(R.string.no_result_message)
+                .setCancelable(true)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        dialog.cancel();
+                        loadDialog.hide();
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    @Override
+    public void setDownloadErrorMessage()
+    {
+        Toast.makeText(this, R.string.download_error,  Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -217,7 +235,8 @@ public class MainActivity extends AppCompatActivity implements AppModel.UI, Obse
         builder.setTitle(R.string.connection_error)
                 .setMessage(R.string.connection_error_message)
                 .setCancelable(true)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
+                {
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {

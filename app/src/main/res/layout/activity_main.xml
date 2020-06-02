@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/black_overlay"
     android:orientation="vertical"
-    tools:context=".UI.MainActivity">
+    tools:context="com.tokovoj.nivltest.UI.MainActivity">
 
     <LinearLayout
         android:id="@+id/search_layout"
